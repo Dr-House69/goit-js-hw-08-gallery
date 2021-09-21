@@ -64,11 +64,16 @@ const galleryItems = [
   },
 ];
 
+
+
 const galleryRef = document.querySelector('.js-gallery')
 const modalRef = document.querySelector('.js-lightbox')
 const overlayRef = document.querySelector('.lightbox__overlay')
 const imageRef = document.querySelector('.lightbox__image')
 const modalBtnRef = document.querySelector('.lightbox__button')
+
+/*  Створення і рендер розмітки по масиву даних `galleryItems` з `app.js` і
+  наданим шаблоном.*/
 
 const galleryMarkup = createGallery()
 galleryRef.insertAdjacentHTML('beforeend', galleryMarkup);
@@ -91,15 +96,22 @@ function setImageAttr(src, alt) {
   imageRef.setAttribute("alt", alt);
 }
 
+/* Відкриття модального вікна при натисканні на елементі галереї. */
+
 galleryRef.addEventListener('click', openModal);
 
 function openModal(e) {
   e.preventDefault();
-  
+
+   /* Реалізація делегування на галереї `ul.js-gallery` і отримання `url` великого
+  зображення. */
+
   if (e.target.nodeName !== 'IMG') {
     return;
   }
 
+  /*  Підміна значення атрибута `src` елемента `img.lightbox__image`.*/
+  
   modalRef.classList.add('is-open');
 
   setImageAttr(
@@ -111,23 +123,37 @@ function openModal(e) {
   window.addEventListener('keydown', scrollKey);
 }
 
+/* Закриття модального вікна при натисканні на кнопку
+  `button[data-action=""close-lightbox"]`. */
+
+/* Закриття модального вікна при натисканні на `div.lightbox__overlay`. */
+  
 modalBtnRef.addEventListener('click', closeModal);
 overlayRef.addEventListener('click', closeModal);
 
 function closeModal() {
   modalRef.classList.remove('is-open');
   
+  /* Очищення значення атрибута `src` елемента `img.lightbox__image`. Це необхідно
+    для того, щоб при наступному відкритті модального вікна, поки вантажиться
+    зображення, ми не бачили попереднє. */
+
   setImageAttr(" ", "");
 
   window.removeEventListener('keydown', pressEsc);
   window.removeEventListener('keydown', scrollKey);
 }
 
+/* Закриття модального вікна після натискання клавіші `ESC`. */
+
 function pressEsc(e) {
   if (e.code === 'Escape') {
     closeModal();
   }
 }
+
+/* Перегортування зображень галереї у відкритому модальному вікні клавішами
+  "вліво"   і "вправо". */
 
 function scrollKey(e) {
   let currentIndex = galleryItems.findIndex(
